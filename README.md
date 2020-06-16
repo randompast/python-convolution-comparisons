@@ -12,7 +12,7 @@ It was found that numpy.convolve is the fastest for a large variety of inputs, b
 
 Best to worst for larger arrays:
 *  cpste - cupy strided
-*  nbc_gm, nbc - numba cuda improvement from @gmarkall
+*  nbc_gm, nbc - numba cuda improvement from [@gmarkall](https://github.com/gmarkall)
 *  cpv, spfcv, spvc, npc
   *  cpv - cupyx.scipy.ndimage,
   *  spvc - scipy.signal.convolve
