@@ -41,5 +41,6 @@ Best to worst for larger arrays:
 ![1D, Third Order](1d3o.png)
 
 Best to worst for larger arrays:
+*  nbcg - numba cuda (naive implementation with @cuda.njit and grids)
 *  nbconv - numba njit (naive implementation with njit)
 *  nbc - numba cuda (naive implementation with @cuda.njit)
