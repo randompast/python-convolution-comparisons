@@ -44,13 +44,27 @@ def test_3_nbcj(x,k,y): #numba_conv
                 for l in range(k.shape[2]):
                     y[n] += x[i+n] * x[j+n] * x[l+n] * k[i,j,l]
 
+@cuda.jit
+def test_3_nbcj_grid(x,k,y): #numba_conv
+    n = cuda.grid(1)
+    if (0 <= n) and (n < y.size):
+        for i in range(k.shape[0]):
+            for j in range(k.shape[1]):
+                for l in range(k.shape[2]):
+                    y[n] += x[i+n] * x[j+n] * x[l+n] * k[i,j,l]
+
 @t
 def test_3_nbc(x, k):
-    # test_1_nb_cuda_jit.__name__ isn't an attribute
-    # this also fixes the api so it can be called with (x,k)
     l = x.size - k.shape[0]
     y = cp.zeros(l)
     test_3_nbcj[1,32](x, k, y)
+    return y
+
+@t
+def test_3_nbcg(x, k):
+    l = x.size - k.shape[0]
+    y = cp.zeros(l)
+    test_3_nbcj_grid[1,256](x, k, y)
     return y
 
 def test_3_valid(n,m):
@@ -61,19 +75,22 @@ def test_3_valid(n,m):
     if True:
         nbconv = test_3_nbconv(x,k)
         nbc = test_3_nbc(x,k)
+        nbcg = test_3_nbcg(x,k)
 
-        # print(nbconv)
-        # print(nbc)
+        print(nbconv)
+        print(nbc)
+        print(nbcg)
 
         print(np.all([
                 np.isclose(nbconv,nbconv)
                 ,np.isclose(nbc,nbconv)
+                ,np.isclose(nbcg,nbconv)
                 ])
                 , n, m
             )
 
 def test_3_plot():
-    for i in range(1,6):
+    for i in range(1,5):
         test_3_valid(4**i, 2**i)
 
     print(results)
@@ -91,4 +108,9 @@ def test_3_plot():
 
 if __name__ == '__main__':
     # test_3_valid(7, 2)
+    # test_3_valid(7, 3)
+    # test_3_valid(7, 4)
+    # test_3_valid(17, 12)
+    # test_3_valid(17, 13)
+    # test_3_valid(17, 14)
     test_3_plot()

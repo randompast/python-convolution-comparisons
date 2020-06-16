@@ -131,8 +131,6 @@ def test_1_nb_cuda_jit_gmarkall(x, k, y):
     if (i >= k.size - 1) and (i < x.size):
         for j in range( k.size ):
             y[i-k.size+1] += x[i-j] * k[j]
-    # return y #doesn't work
-
 
 @t
 def test_1_nbc(x, k):
