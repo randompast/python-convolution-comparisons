@@ -43,3 +43,10 @@ Best to worst for larger arrays:
 Best to worst for larger arrays:
 *  nbconv - numba njit (naive implementation with njit)
 *  nbc - numba cuda (naive implementation with @cuda.njit)
+*  nbcg - numba cuda (naive implementation with @cuda.njit and grid)
+
+![1D, Third Order](1d3o_g.png)
+
+Best to worst for larger arrays:
+*  nbcg - numba cuda (naive implementation with @cuda.njit and grid, 128 is faster than 1024 (t/b))
+*  nbconv - numba njit (naive implementation with njit)

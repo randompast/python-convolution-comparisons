@@ -64,7 +64,20 @@ def test_3_nbc(x, k):
 def test_3_nbcg(x, k):
     l = x.size - k.shape[0]
     y = cp.zeros(l)
-    test_3_nbcj_grid[1,256](x, k, y)
+    th = 128
+    b = y.size//th+1
+    # print(b,th)
+    test_3_nbcj_grid[b,th](x, k, y)
+    return y
+
+@t
+def test_3_nbcg1024(x, k):
+    l = x.size - k.shape[0]
+    y = cp.zeros(l)
+    th = 1024
+    b = y.size//th+1
+    # print(b,th)
+    test_3_nbcj_grid[b,th](x, k, y)
     return y
 
 def test_3_valid(n,m):
@@ -74,23 +87,25 @@ def test_3_valid(n,m):
 
     if True:
         nbconv = test_3_nbconv(x,k)
-        nbc = test_3_nbc(x,k)
+        # nbc = test_3_nbc(x,k)
         nbcg = test_3_nbcg(x,k)
+        nbcg1024 = test_3_nbcg1024(x,k)
 
-        print(nbconv)
-        print(nbc)
-        print(nbcg)
+        # print(nbconv)
+        # print(nbc)
+        # print(nbcg)
 
         print(np.all([
                 np.isclose(nbconv,nbconv)
-                ,np.isclose(nbc,nbconv)
+                # ,np.isclose(nbc,nbconv)
                 ,np.isclose(nbcg,nbconv)
+                ,np.isclose(nbcg1024,nbconv)
                 ])
                 , n, m
             )
 
 def test_3_plot():
-    for i in range(1,5):
+    for i in range(1,6):
         test_3_valid(4**i, 2**i)
 
     print(results)
@@ -98,7 +113,7 @@ def test_3_plot():
         a = np.asarray(results[k])
         x = [4**(i+1) * 2**(i+1) for i in range(a.shape[0])]
         y = a[:,2]
-        plt.plot(x, y, label=k[7:])
+        plt.plot(x[1:], y[1:], label=k[7:])
         plt.text(x[-1], y[-1], str(k[7:]))
     plt.xscale('log')
     plt.yscale('log')
@@ -113,4 +128,5 @@ if __name__ == '__main__':
     # test_3_valid(17, 12)
     # test_3_valid(17, 13)
     # test_3_valid(17, 14)
+    # test_3_valid(64, 8)
     test_3_plot()
