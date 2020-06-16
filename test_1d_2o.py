@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
-# from numba import cuda, jit, njit, vectorize
-from numba import njit
+import cupy as cp
+from numba import cuda, jit, njit, vectorize
+# from numba import njit
 from scipy.signal import convolve as spc
 from scipy.signal import fftconvolve as spfc
 import time
@@ -50,6 +51,23 @@ def test_2_nbconv(x,k): #numba_conv
                 y[n] += x[i+n] * x[j+n] * k[i,j]
     return y
 
+
+@cuda.jit
+def test_2_nbcj(x,k,y): #numba_conv
+    for n in range(y.size):
+        for i in range(k.shape[0]):
+            for j in range(k.shape[1]):
+                y[n] += x[i+n] * x[j+n] * k[i,j]
+
+@t
+def test_2_nbc(x, k):
+    # test_1_nb_cuda_jit.__name__ isn't an attribute
+    # this also fixes the api so it can be called with (x,k)
+    l = x.size - k.shape[0]+1
+    y = cp.zeros(l)
+    test_2_nbcj[1,32](x, k, y)
+    return y
+
 @t
 def test_2_npfe(x,k): #np for loop einsum
     y = np.zeros( x.size )
@@ -73,15 +91,19 @@ def test_2_valid(n,m):
         npfe = test_2_npfe(x,K)
         npe = test_2_npe(x,K)
         nbconv = test_2_nbconv(x,K)
+        nbc = test_2_nbc(x,K)
         # nbconv_wh = test_2_nbconv_wh(x,K)
-        # print(npfe)
-        # print(npe)
-        # print(nbconv)
+        print(npfe)
+        print(npe)
+        print(nbconv)
+        print(nbc)
         print(np.all([
                 np.isclose(npfe,npe)
                 ,np.isclose(nbconv,npe)
+                ,np.isclose(nbc,npe)
                 # ,np.isclose(nbconv_wh,npe)
                 ])
+                , n, m
             )
 
 def test_2_plot():
@@ -105,6 +127,8 @@ def test_2_plot():
 
 if __name__ == '__main__':
     # print(test_2_nbconv.__dir__())
-    # test_2_valid(8, 2)
+    test_2_valid(8, 2)
+    test_2_valid(8, 3)
+    test_2_valid(8, 4)
     # test_2_valid(1000, 100)
-    test_2_plot()
+    # test_2_plot()
