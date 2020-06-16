@@ -89,7 +89,7 @@ def test_3_valid(n,m):
 
     if True:
         nbconv = test_3_nbconv(x,k)
-        nbc = test_3_nbc(x,k)
+        nbc = test_3_nbc(xc,kc)
         nbcg = test_3_nbcg(xc,kc)
         nbcg1024 = test_3_nbcg1024(xc,kc)
 

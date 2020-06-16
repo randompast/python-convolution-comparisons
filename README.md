@@ -56,7 +56,8 @@ Best to worst for larger arrays:
 ![1D, Third Order](1d3o.png)
 
 Best to worst for larger arrays:
-*  nbcg1024 - numba cuda (naive implementation with @cuda.njit and grid, 1024 threads/block)
-*  nbcg - numba cuda (naive implementation with @cuda.njit and grid)
+*  nbcg, nbcg1024, nbc
+  *  nbcg - numba cuda (naive implementation with @cuda.njit and grid)
+  *  nbcg1024 - numba cuda (naive implementation with @cuda.njit and grid, 1024 threads/block)
+  *  nbc - numba cuda (naive implementation with @cuda.njit)
 *  nbconv - numba njit (naive implementation with njit)
-*  nbc - numba cuda (naive implementation with @cuda.njit)
