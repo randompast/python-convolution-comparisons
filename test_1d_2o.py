@@ -54,18 +54,20 @@ def test_2_nbconv(x,k): #numba_conv
 
 @cuda.jit
 def test_2_nbcj(x,k,y): #numba_conv
-    for n in range(y.size):
+    n = cuda.grid(1)
+    if (0 <= n) and (n < y.size):
         for i in range(k.shape[0]):
             for j in range(k.shape[1]):
                 y[n] += x[i+n] * x[j+n] * k[i,j]
-
 @t
 def test_2_nbc(x, k):
     # test_1_nb_cuda_jit.__name__ isn't an attribute
     # this also fixes the api so it can be called with (x,k)
-    l = x.size - k.shape[0]+1
-    y = cp.zeros(l)
-    test_2_nbcj[1,32](x, k, y)
+    y = cp.zeros(x.size - k.shape[0] + 1)
+    # y = cuda.device_array_like(ys)
+    th = 128
+    b = len(x)//th + 1
+    test_2_nbcj[b,th](x, k, y)
     return y
 
 @t
@@ -82,21 +84,25 @@ def test_2_npe(x,k):
     return np.einsum('nij,ij',X,k)
 
 def test_2_valid(n,m):
-    # x = np.random.uniform(0,1,n)
-    x = np.arange(n)
-    k = np.random.uniform(0,1,m)
-    K = np.outer( np.arange(m), np.arange(m) )+2
+    x = np.random.uniform(-1,1,n)
+    K = np.random.uniform(-1,1,(m,m))
+
+    xc = cuda.to_device(x)
+    kc = cuda.to_device(K)
+    # l = x.size - K.shape[0]+1
+    # y = np.zeros(l)
+    # ys = cuda.to_device(y)
 
     if True:
         npfe = test_2_npfe(x,K)
         npe = test_2_npe(x,K)
         nbconv = test_2_nbconv(x,K)
-        nbc = test_2_nbc(x,K)
+        nbc = test_2_nbc(xc,kc)#.copy_to_host()
         # nbconv_wh = test_2_nbconv_wh(x,K)
-        print(npfe)
-        print(npe)
-        print(nbconv)
-        print(nbc)
+        # print(npfe)
+        # print(npe)
+        # print(nbconv)
+        # print(nbc)
         print(np.all([
                 np.isclose(npfe,npe)
                 ,np.isclose(nbconv,npe)
@@ -107,7 +113,7 @@ def test_2_valid(n,m):
             )
 
 def test_2_plot():
-    for i in range(1,6):
+    for i in range(1,8):
         test_2_valid(4**i, 2**i)
 
     print(results)
@@ -117,7 +123,7 @@ def test_2_plot():
         # x = [a[i][0]*a[i][1] for i in range(a.shape[0])]
         y = a[:,2]
         # print(k, x, y)
-        plt.plot(x, y, label=k[7:])
+        plt.plot(x[1:], y[1:], label=k[7:])
         plt.text(x[-1], y[-1], str(k[7:]))
     plt.xscale('log')
     plt.yscale('log')
@@ -127,8 +133,8 @@ def test_2_plot():
 
 if __name__ == '__main__':
     # print(test_2_nbconv.__dir__())
-    test_2_valid(8, 2)
-    test_2_valid(8, 3)
-    test_2_valid(8, 4)
+    # test_2_valid(8, 2)
+    # test_2_valid(8, 3)
+    # test_2_valid(8, 4)
     # test_2_valid(1000, 100)
-    # test_2_plot()
+    test_2_plot()

@@ -46,22 +46,17 @@ Best to worst for larger arrays:
 ![1D, Second Order](1d2o.png)
 
 Best to worst for larger arrays:
-*  nbconv - numba njit (naive implementation with njit)
-*  npe - numpy einsum (generate the outer product all at once first)
-*  npfe - numpy for loop einsum (generate the outer product on demand)
 *  nbc - numba cuda (naive implementation with @cuda.njit)
+*  nbconv - numba njit (naive implementation with njit)
+*  npfe - numpy for loop einsum (generate the outer product on demand)
+*  npe - numpy einsum (generate the outer product all at once first)
 
 # 1D Third Order
 
 ![1D, Third Order](1d3o.png)
 
 Best to worst for larger arrays:
-*  nbconv - numba njit (naive implementation with njit)
+*  nbcg1024 - numba cuda (naive implementation with @cuda.njit and grid, 1024 threads/block)
 *  nbcg - numba cuda (naive implementation with @cuda.njit and grid)
-*  nbc - numba cuda (naive implementation with @cuda.njit)
-
-![1D, Third Order](1d3o_g.png)
-
-Best to worst for larger arrays:
-*  nbcg - numba cuda (naive implementation with @cuda.njit and grid, 128 is faster than 1024 (t/b))
 *  nbconv - numba njit (naive implementation with njit)
+*  nbc - numba cuda (naive implementation with @cuda.njit)

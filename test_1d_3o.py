@@ -84,12 +84,14 @@ def test_3_valid(n,m):
     np.random.seed(0)
     x = np.random.uniform(-1,1,n)
     k = np.random.uniform(-1,1,(m,m,m))
+    xc = cuda.to_device(x)
+    kc = cuda.to_device(k)
 
     if True:
         nbconv = test_3_nbconv(x,k)
-        # nbc = test_3_nbc(x,k)
-        nbcg = test_3_nbcg(x,k)
-        nbcg1024 = test_3_nbcg1024(x,k)
+        nbc = test_3_nbc(x,k)
+        nbcg = test_3_nbcg(xc,kc)
+        nbcg1024 = test_3_nbcg1024(xc,kc)
 
         # print(nbconv)
         # print(nbc)
@@ -97,7 +99,7 @@ def test_3_valid(n,m):
 
         print(np.all([
                 np.isclose(nbconv,nbconv)
-                # ,np.isclose(nbc,nbconv)
+                ,np.isclose(nbc,nbconv)
                 ,np.isclose(nbcg,nbconv)
                 ,np.isclose(nbcg1024,nbconv)
                 ])
