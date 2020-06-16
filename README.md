@@ -28,14 +28,15 @@ Best to worst for larger arrays:
 *  cpste - cupy strided [@Alexer](https://github.com/alexer)
 *  nbc_gm, nbc - numba cuda improvement from [@gmarkall](https://github.com/gmarkall) [via](https://numba.discourse.group/t/numba-convolutions/33/2)
 *  cpv, spfcv, spvc, npc
-  *  cpv - cupyx.scipy.ndimage,
-  *  spvc - scipy.signal.convolve
-  *  spfvc - scipy.signal.fftconvolve
-  *  npc - numpy.convolve
-*  npste - numpy strided [@Alexer](https://github.com/alexer)
-*  nbpd_np - numba parallel dot, no gil
-*  nbp - numba parallel
-*  nbnpc_nj - @njit numba numpy convolve
+    *  cpv - cupyx.scipy.ndimage,
+    *  spvc - scipy.signal.convolve
+    *  spfvc - scipy.signal.fftconvolve
+    *  npc - numpy.convolve
+*  npste, nbpd_np, nbp, nbnpc, nbnpc_nj
+    *  npste - numpy strided [@Alexer](https://github.com/alexer)
+    *  nbpd_np - numba parallel dot, no gil
+    *  nbp - numba parallel
+    *  nbnpc_nj - @njit numba numpy convolve
 *  npd - numpy dot
 *  npfe - numpy for einsum
 *  naive - (not shown) two for loops, significantly worse
@@ -46,8 +47,8 @@ Best to worst for larger arrays:
 
 Best to worst for larger arrays:
 *  nbconv - numba njit (naive implementation with njit)
-*  npfe - numpy for loop einsum (generate the outer product on demand)
 *  npe - numpy einsum (generate the outer product all at once first)
+*  npfe - numpy for loop einsum (generate the outer product on demand)
 *  nbc - numba cuda (naive implementation with @cuda.njit)
 
 # 1D Third Order
@@ -55,10 +56,9 @@ Best to worst for larger arrays:
 ![1D, Third Order](1d3o.png)
 
 Best to worst for larger arrays:
-*  nbcg - numba cuda (naive implementation with @cuda.njit and grids)
 *  nbconv - numba njit (naive implementation with njit)
-*  nbc - numba cuda (naive implementation with @cuda.njit)
 *  nbcg - numba cuda (naive implementation with @cuda.njit and grid)
+*  nbc - numba cuda (naive implementation with @cuda.njit)
 
 ![1D, Third Order](1d3o_g.png)
 
