@@ -4,7 +4,9 @@ Convolutions are a fundamental operation in scientific computing.  The goal here
 
 Ideal implementation would have the inputs (x,K) where x is 1d or 3d K is [0th order, 1st order, 2nd, order, ... nth order].
 
-Example usages
+Example usages:
+
+    x1 = np.random.uniform(-1,1,100)
     x3 = np.random.uniform(-1,1,(100,10,10))
     k1 = np.random.uniform(-1,1,10))
     k2 = np.random.uniform(-1,1,(10,10))
