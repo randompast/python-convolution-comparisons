@@ -100,7 +100,7 @@ def test_2_valid(n,m):
         nbc = test_2_nbc(xc,kc)#.copy_to_host()
         # nbconv_wh = test_2_nbconv_wh(x,K)
         # print(npfe)
-        print(npe)
+        # print(npe)
         # print(nbconv)
         # print(nbc)
         print(np.all([
@@ -113,13 +113,13 @@ def test_2_valid(n,m):
             )
 
 def test_2_plot():
-    for i in range(1,7):
+    for i in range(1,8):
         test_2_valid(4**i, 2**i)
 
     print(results)
     for k in results:
         a = np.asarray(results[k])
-        x = [4**(i+1) * 2**(i+1) for i in range(a.shape[0])]
+        x = [4**(i+1) * 2**(2*(i+1)) for i in range(a.shape[0])]
         # x = [a[i][0]*a[i][1] for i in range(a.shape[0])]
         y = a[:,2]
         # print(k, x, y)
@@ -133,8 +133,8 @@ def test_2_plot():
 
 if __name__ == '__main__':
     # print(test_2_nbconv.__dir__())
-    test_2_valid(8, 2)
+    # test_2_valid(8, 2)
     # test_2_valid(8, 3)
     # test_2_valid(8, 4)
     # test_2_valid(1000, 100)
-    # test_2_plot()
+    test_2_plot()

@@ -112,7 +112,7 @@ def test_3_plot():
     print(results)
     for k in results:
         a = np.asarray(results[k])
-        x = [4**(i+1) * 2**(i+1) for i in range(a.shape[0])]
+        x = [4**(i+1) * 2**(3*(i+1)) for i in range(a.shape[0])]
         y = a[:,2]
         plt.plot(x[1:], y[1:], label=k[7:])
         plt.text(x[-1], y[-1], str(k[7:]))
