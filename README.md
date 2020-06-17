@@ -1,6 +1,6 @@
 # Python Convolution Comparisons
 
-Convolutions, or sliding dot products, are fundamental operations in scientific computing.  The goal here is to explore the possible approaches in python.  The graphs shown are size of x times the length of k vs runtimes.
+Convolutions, or sliding dot products, are fundamental operations in scientific computing.  The goal here is to explore the possible approaches in python.  The graphs shown are number of elements vs runtimes.
 
 Ideal implementation would have the inputs (x,K) where x is 1d or 3d K is [0th order, 1st order, 2nd, order, ... nth order].
 
