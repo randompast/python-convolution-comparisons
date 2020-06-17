@@ -34,7 +34,7 @@ def test_2_nbdh(x,k,n): #numba_dot_helper
 @t
 @njit
 def test_2_nbconv_wh(x,k): #numba_conv
-    l = x.size - k.shape[0]+1
+    l = x.size - k.shape[0] + 1
     y = np.zeros(l)
     for i in range(l):
         y[i] = test_2_nbdh(x,k,i)
@@ -43,7 +43,7 @@ def test_2_nbconv_wh(x,k): #numba_conv
 @t
 @njit
 def test_2_nbconv(x,k): #numba_conv
-    l = x.size - k.shape[0]+1
+    l = x.size - k.shape[0] + 1
     y = np.zeros(l)
     for n in range(l):
         for i in range(k.shape[0]):
@@ -100,7 +100,7 @@ def test_2_valid(n,m):
         nbc = test_2_nbc(xc,kc)#.copy_to_host()
         # nbconv_wh = test_2_nbconv_wh(x,K)
         # print(npfe)
-        # print(npe)
+        print(npe)
         # print(nbconv)
         # print(nbc)
         print(np.all([
@@ -113,7 +113,7 @@ def test_2_valid(n,m):
             )
 
 def test_2_plot():
-    for i in range(1,8):
+    for i in range(1,7):
         test_2_valid(4**i, 2**i)
 
     print(results)
@@ -133,8 +133,8 @@ def test_2_plot():
 
 if __name__ == '__main__':
     # print(test_2_nbconv.__dir__())
-    # test_2_valid(8, 2)
+    test_2_valid(8, 2)
     # test_2_valid(8, 3)
     # test_2_valid(8, 4)
     # test_2_valid(1000, 100)
-    test_2_plot()
+    # test_2_plot()

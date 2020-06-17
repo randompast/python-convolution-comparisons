@@ -61,3 +61,14 @@ Best to worst for larger arrays:
   *  nbcg1024 - numba cuda (naive implementation with @cuda.njit and grid, 1024 threads/block)
   *  nbc - numba cuda (naive implementation with @cuda.njit)
 *  nbconv - numba njit (naive implementation with njit)
+
+
+# 3D First Order
+
+A video would be a good example of a 3D signal.
+
+![3D, First Order](3d1o.png)
+
+Best to worst for larger arrays:
+*  nbcg - numba cuda (naive implementation with @cuda.njit and grid)
+*  nbconv - numba njit (naive implementation with njit)
