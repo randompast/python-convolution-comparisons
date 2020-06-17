@@ -70,5 +70,9 @@ A video would be a good example of a 3D signal.
 ![3D, First Order](3d1o.png)
 
 Best to worst for larger arrays:
+*  cpv - cupyx.scipy.ndimage
+*  cpste - cupy stride tricks [@Alexer](https://github.com/alexer)
 *  nbcg - numba cuda (naive implementation with @cuda.njit and grid)
+*  npste - numpy stride tricks [@Alexer](https://github.com/alexer)
 *  nbconv - numba njit (naive implementation with njit)
+*  spv - scipy.signal.convolve valid

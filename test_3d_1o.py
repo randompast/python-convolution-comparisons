@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import cupy as cp
 from numba import cuda, jit, njit, vectorize
-# from numba import njit
+from cupyx.scipy.ndimage import convolve as cpxc
 from scipy.signal import convolve as spc
 from scipy.signal import fftconvolve as spfc
 import time
@@ -47,6 +47,16 @@ def test_3d1o_cpste(x,k):
         + k.shape, strides=x.strides[:1] + x.strides)
     return cp.einsum('nijk,ijk', xw, k)
 
+@t
+def test_3d1o_cpv(x, k):
+    return cpxc(x, k)[ k.shape[0]/2 + k.shape[0]%2 -1 : -k.shape[0]/2
+        , k.shape[1]/2 + k.shape[1]%2 -1
+        , k.shape[2]/2 + k.shape[2]%2 -1 ]
+
+@t
+def test_3d1o_spv(x, k):
+    return spc(x, k, mode='valid').flatten()
+
 @cuda.jit
 def test_3d1o_nbcj_grid(x,k,y): #numba_conv
     n = cuda.grid(1)
@@ -70,24 +80,40 @@ def test_3d1o_valid(n,m):
     np.random.seed(0)
     x = np.random.uniform(-1,1,(n,m,m))
     k = np.random.uniform(-1,1,(m,m,m))
+    # x = np.arange(n*m*m).reshape(n,m,m)
+    # k = np.arange(m*m*m).reshape(m,m,m)
+    # kinv = np.arange(m*m*m)[::-1].reshape(m,m,m)
+    kinv = k.flatten()[::-1].reshape(m,m,m)
     xc = cuda.to_device(x)
     kc = cuda.to_device(k)
+    xcp = cp.asarray(x)
+    kcp = cp.asarray(k)
+    kcpinv = cp.asarray(kinv)
+
+    # print(x)
+    # print(k)
 
     if True:
         nbconv = test_3d1o_nbconv(x, k)
         nbcg = test_3d1o_nbcg(xc, kc)
         npste = test_3d1o_npste(x, k)
-        cpste = test_3d1o_cpste(cp.asarray(x), cp.asarray(k))
+        cpste = test_3d1o_cpste(xcp, kcp)
+        spv = test_3d1o_spv(x, kinv)
+        cpv = test_3d1o_cpv(xcp, kcpinv)
 
         # print(nbconv)
         # print(npste)
         # print(cpste)
         # print(nbcg)
+        # print(spv)
+        # print(cpv)
 
         print(np.all([
                 np.isclose(nbcg,nbconv)
                 ,np.isclose(npste,nbconv)
                 ,np.isclose(cpste,nbconv)
+                ,np.isclose(spv,nbconv)
+                ,np.isclose(cpv,nbconv)
                 ])
                 , n, m
             )
@@ -110,5 +136,7 @@ def test_3d1o_plot():
 
 
 if __name__ == '__main__':
-    # test_3d1o_valid(7, 2)
+    # test_3d1o_valid(5, 2)
+    # test_3d1o_valid(5, 3)
+    # test_3d1o_valid(5, 4)
     test_3d1o_plot()
